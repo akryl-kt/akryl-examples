@@ -1,23 +1,23 @@
 package io.akryl.helloworld
 
 import io.akryl.*
+import io.akryl.css.css
 import io.akryl.html.Div
 import io.akryl.html.H1
 import kotlin.browser.document
 
-class HelloWorld : StatelessWidget() {
-  override fun style() = css {
-    "h1" {
-      textAlign = "center"
-    }
-  }
+val root by css {
+  textAlign.center()
+}
 
-  override fun build(context: BuildContext) = Div(
-    H1(text = "Hello, World!")
+class HelloWorld : Component() {
+  override fun render() = Div(
+    clazz = root,
+    child = H1(text = "Hello, World!")
   )
 }
 
 fun main() {
   val app = document.getElementById("app")!!
-  hotMount(app, HelloWorld())
+  render(HelloWorld(), app)
 }
