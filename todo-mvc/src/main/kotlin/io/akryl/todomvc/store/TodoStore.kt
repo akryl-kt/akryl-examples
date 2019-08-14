@@ -1,8 +1,8 @@
-package io.akryl.todomvc
+package io.akryl.todomvc.store
 
-import io.akryl.BuildContext
 import io.akryl.rx.computed
 import io.akryl.store.Store
+import io.akryl.store.StoreContext
 
 data class Task(
   var id: String,
@@ -16,12 +16,14 @@ data class TaskFilter(
   val predicate: (Task) -> Boolean
 )
 
+val TodoContext = StoreContext.create<TodoStore>()
+
 class TodoStore : Store() {
   companion object {
-    fun of(context: BuildContext) = of<TodoStore>(context)
+    fun use() = of(TodoContext)
   }
 
-  var tasks = arrayListOf(
+  var items = arrayListOf(
     Task(id = uuid4(), title = "Task 1", completed = false),
     Task(id = uuid4(), title = "Task 2", completed = true),
     Task(id = uuid4(), title = "Task 3", completed = false)
@@ -47,40 +49,46 @@ class TodoStore : Store() {
 
   var filter: TaskFilter = filters[0]
 
-  val filtered by computed { tasks.filter(filter.predicate) }
+  val filtered by computed { items.filter(filter.predicate) }
 
-  val allCompleted by computed { tasks.all { it.completed } }
+  val allCompleted by computed { items.all { it.completed } }
 
   fun add(title: String) {
-    tasks.add(Task(
+    items.add(Task(
       id = uuid4(),
       title = title,
       completed = false
     ))
-    println(tasks)
+    println(items)
   }
 
   fun toggle(id: String) {
-    val task = tasks.first { it.id == id }
+    val task = items.first { it.id == id }
     task.completed = !task.completed
   }
 
   fun clearCompleted() {
-    tasks.removeAll { it.completed }
+    items.removeAll { it.completed }
   }
 
   fun delete(id: String) {
-    tasks.removeAt(tasks.indexOfFirst { it.id == id })
+    items.removeAt(items.indexOfFirst { it.id == id })
   }
 
   fun toggleAll() {
     val value = !allCompleted
-    tasks.forEach { it.completed = value }
+    items.forEach { it.completed = value }
   }
 
   fun rename(id: String, title: String) {
-    val task = tasks.first { it.id == id }
+    val task = items.first { it.id == id }
     task.title = title
+  }
+
+  fun get(id: String) = items.firstOrNull { it.id == id }
+
+  fun remove(id: String) {
+    items.removeAll { it.id == id }
   }
 }
 
