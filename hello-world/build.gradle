@@ -15,7 +15,6 @@ buildscript {
 
 apply plugin: "kotlin2js"
 apply plugin: "org.jetbrains.kotlin.frontend"
-apply plugin: "kotlin-dce-js"
 apply plugin: "maven"
 
 group = "io.akryl"
@@ -51,4 +50,9 @@ kotlinFrontend {
         bundleName = "main"
         contentPath = file("src/main/web")
     }
+}
+
+task copyJsToWebpack(type: Copy) {
+    from("$buildDir/classes/kotlin/main")
+    into("$buildDir/webpack")
 }

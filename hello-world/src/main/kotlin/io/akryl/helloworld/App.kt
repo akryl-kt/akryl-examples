@@ -4,6 +4,7 @@ import io.akryl.*
 import io.akryl.css.css
 import io.akryl.html.Div
 import io.akryl.html.H1
+import js.module
 import kotlin.browser.document
 
 val root by css {
@@ -18,6 +19,7 @@ class HelloWorld : Component() {
 }
 
 fun main() {
+  module.hot?.accept()
   val app = document.getElementById("app")!!
   render(HelloWorld(), app)
 }
