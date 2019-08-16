@@ -8,9 +8,12 @@ import io.akryl.css.rgba
 import io.akryl.html.Div
 import io.akryl.html.Section
 import io.akryl.react.ReactNode
+import io.akryl.todomvc.repositories.TaskRepository
 import io.akryl.todomvc.store.TodoContext
 import io.akryl.todomvc.store.TodoStore
 import io.akryl.useRef
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonConfiguration
 
 private val app by css {
   width(550.px)
@@ -22,7 +25,11 @@ private val app by css {
 
 class AppView : Component() {
   override fun render(): ReactNode {
-    val store by useRef { TodoStore() }
+    val store by useRef {
+      val json = Json(JsonConfiguration.Stable)
+      val repository = TaskRepository(json)
+      TodoStore(repository)
+    }
 
     return TodoContext.provide(
       store = store,

@@ -3,12 +3,8 @@ package io.akryl.todomvc.store
 import io.akryl.rx.computed
 import io.akryl.store.Store
 import io.akryl.store.StoreContext
-
-data class Task(
-  var id: String,
-  var title: String,
-  var completed: Boolean
-)
+import io.akryl.todomvc.entities.Task
+import io.akryl.todomvc.repositories.TaskRepository
 
 data class TaskFilter(
   val name: String,
@@ -18,16 +14,12 @@ data class TaskFilter(
 
 val TodoContext = StoreContext.create<TodoStore>()
 
-class TodoStore : Store() {
+class TodoStore(private val repository: TaskRepository) : Store() {
   companion object {
     fun use() = of(TodoContext)
   }
 
-  var items = arrayListOf(
-    Task(id = uuid4(), title = "Task 1", completed = false),
-    Task(id = uuid4(), title = "Task 2", completed = true),
-    Task(id = uuid4(), title = "Task 3", completed = false)
-  )
+  val items = ArrayList(repository.getAll())
 
   val filters = listOf(
     TaskFilter(
@@ -59,36 +51,37 @@ class TodoStore : Store() {
       title = title,
       completed = false
     ))
-    println(items)
+    repository.saveAll(items)
   }
 
   fun toggle(id: String) {
     val task = items.first { it.id == id }
     task.completed = !task.completed
+    repository.saveAll(items)
   }
 
   fun clearCompleted() {
     items.removeAll { it.completed }
-  }
-
-  fun delete(id: String) {
-    items.removeAt(items.indexOfFirst { it.id == id })
+    repository.saveAll(items)
   }
 
   fun toggleAll() {
     val value = !allCompleted
     items.forEach { it.completed = value }
+    repository.saveAll(items)
   }
 
   fun rename(id: String, title: String) {
     val task = items.first { it.id == id }
     task.title = title
+    repository.saveAll(items)
   }
 
   fun get(id: String) = items.firstOrNull { it.id == id }
 
   fun remove(id: String) {
     items.removeAll { it.id == id }
+    repository.saveAll(items)
   }
 }
 
