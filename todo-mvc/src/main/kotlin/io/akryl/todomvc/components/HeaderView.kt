@@ -54,7 +54,7 @@ class HeaderView : Component() {
     var title by useState("")
 
     fun keyDown(event: KeyboardEvent) {
-      if (event.keyCode == 13) {
+      if (event.keyCode == 13 && title.isNotBlank()) {
         store.add(title)
         title = ""
       }
