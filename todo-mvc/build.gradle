@@ -28,8 +28,8 @@ repositories {
 }
 
 dependencies {
-    compile "io.akryl:akryl-core:0.6.2"
-    compile "io.akryl:akryl-store:0.2.1"
+    compile "io.akryl:akryl-core:0.+"
+    compile "io.akryl:akryl-store:0.+"
     compile "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlinVersion"
 }
 
