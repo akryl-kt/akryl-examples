@@ -1,6 +1,7 @@
 package io.akryl.todomvc.components
 
 import io.akryl.Component
+import io.akryl.StateProperty
 import io.akryl.css.*
 import io.akryl.html.*
 import io.akryl.react.ReactNode
@@ -8,8 +9,9 @@ import io.akryl.todomvc.Theme
 import io.akryl.todomvc.store.TodoStore
 import io.akryl.useState
 import io.akryl.utils.Else
-import io.akryl.utils.If
+import io.akryl.utils.IfNotNull
 import org.w3c.dom.HTMLInputElement
+import org.w3c.dom.events.Event
 
 private val root by css {
   position.relative()
@@ -100,7 +102,7 @@ private val completed by css {
 data class TodoView(val id: String) : Component(key = id) {
   override fun render(): ReactNode {
     val store = TodoStore.use()
-    var editing by useState(false)
+    val editingTitle = useState<String?>(null)
     val todo = store.get(id) ?: return Div()
 
     val rootClass = classMap(
@@ -109,13 +111,13 @@ data class TodoView(val id: String) : Component(key = id) {
     )
 
     return Li(classes = rootClass, children = listOf(
-      *If(editing) {
+      *IfNotNull(editingTitle.value) { title ->
         Input(
           clazz = edit,
           autoFocus = true,
-          value = todo.title,
-          onChange = { store.rename(id, (it.target as HTMLInputElement).value) },
-          onBlur = { editing = false }
+          value = title,
+          onChange = { titleChanged(editingTitle, it) },
+          onBlur = { editBlur(title, store, editingTitle) }
         )
       } Else {
         Div(children = listOf(
@@ -128,7 +130,7 @@ data class TodoView(val id: String) : Component(key = id) {
           Label(
             clazz = label,
             text = todo.title,
-            onDoubleClick = { editing = true }
+            onDoubleClick = { editingTitle.value = todo.title }
           ),
           Button(
             clazz = destroy,
@@ -137,5 +139,16 @@ data class TodoView(val id: String) : Component(key = id) {
         ))
       }
     ))
+  }
+
+  private fun editBlur(title: String, store: TodoStore, editingTitle: StateProperty<String?>) {
+    if (title.isNotBlank()) {
+      store.rename(id, title)
+    }
+    editingTitle.value = null
+  }
+
+  private fun titleChanged(editingTitle: StateProperty<String?>, it: Event) {
+    editingTitle.value = (it.target as HTMLInputElement).value
   }
 }
