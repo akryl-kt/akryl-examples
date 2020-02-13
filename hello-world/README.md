@@ -7,7 +7,7 @@ Simplest example app for [akryl](https://github.com/akryl-kt).
 To run webpack development server:
 
 ```bash
-./serve.sh
+./run.sh
 ```
 
 ## Build
@@ -15,7 +15,5 @@ To run webpack development server:
 To build production bundle:
 
 ```bash
-./gradlew bundle
+./bundle.sh
 ```
-
-The output file is `./build/bundle/main.bundle.js`

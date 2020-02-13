@@ -1,71 +1,67 @@
 package io.akryl.todomvc.components
 
-import io.akryl.Component
-import io.akryl.css.classMap
-import io.akryl.css.css
-import io.akryl.css.deg
-import io.akryl.css.px
-import io.akryl.html.Div
-import io.akryl.html.Input
-import io.akryl.html.Label
-import io.akryl.react.ReactNode
-import io.akryl.todomvc.Theme
-import io.akryl.todomvc.store.TodoStore
+import io.akryl.component
+import io.akryl.dom.css.classMap
+import io.akryl.dom.css.css
+import io.akryl.dom.css.invoke
+import io.akryl.dom.css.properties.*
+import io.akryl.dom.html.Div
+import io.akryl.dom.html.Input
+import io.akryl.dom.html.Label
+import io.akryl.todomvc.store.useStore
 
-private val main by css {
-  position.relative()
-  zIndex(2)
-  borderTop.solid(1.px, Theme.background)
-}
+private val main by css(
+    position.relative(),
+    zIndex(2),
+    borderTop.solid(1.px, Color(0xE6E6E6))
+)
 
-private val toggleAllInput by css {
-  background.none()
-  textAlign.center()
-  borderStyle.none()
-  opacity(0)
-  position.absolute()
-}
+private val toggleAllInput by css(
+    background.none(),
+    textAlign.center(),
+    borderStyle.none(),
+    opacity(0),
+    position.absolute()
+)
 
-private val toggleAllLabel by css {
-  width(60.px)
-  height(34.px)
-  fontSize(0.px)
-  position.absolute()
-  top(-52.px)
-  left(-13.px)
-  transform.rotate(90.deg)
-  color(Theme.background)
+private val toggleAllLabel by css(
+    width(60.px),
+    height(34.px),
+    fontSize(0.px),
+    position.absolute(),
+    top(-52.px),
+    left(-13.px),
+    transform.rotate(90.deg),
+    color(0xE6E6E6),
 
-  before {
-    content("❯")
-    fontSize(22.px)
-    padding(10.px, 27.px, 10.px, 27.px)
-  }
-}
+    before(
+        content("❯"),
+        fontSize(22.px),
+        padding(10.px, 27.px, 10.px, 27.px)
+    )
+)
 
-private val completed by css {
-  color(0x737373)
-}
+private val completed by css(
+    color(0x737373)
+)
 
-class MainView : Component() {
-  override fun render(): ReactNode {
-    val store = TodoStore.use()
+fun mainView() = component {
+    val store = useStore()
 
     val labelClass = classMap(
-      toggleAllLabel to true,
-      completed to store.allCompleted
+        toggleAllLabel to true,
+        completed to store.allCompleted
     )
 
-    return Div(clazz = main, children = listOf(
-      Input(
-        id = "toggle-all",
-        clazz = toggleAllInput,
-        type = "checkbox",
-        checked = store.allCompleted,
-        onChange = { store.toggleAll() }
-      ),
-      Label(`for` = "toggle-all", classes = labelClass),
-      TodoListView()
+    Div(className = main, children = listOf(
+        Input(
+            id = "toggle-all",
+            className = toggleAllInput,
+            type = "checkbox",
+            checked = store.allCompleted,
+            onChange = { store.toggleAll() }
+        ),
+        Label(`for` = "toggle-all", className = labelClass),
+        todoListView()
     ))
-  }
 }

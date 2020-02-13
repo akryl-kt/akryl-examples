@@ -1,10 +1,10 @@
 package io.akryl.todomvc.store
 
-import io.akryl.rx.computed
-import io.akryl.store.Store
-import io.akryl.store.StoreContext
+import io.akryl.ComponentScope
 import io.akryl.todomvc.entities.Task
 import io.akryl.todomvc.repositories.TaskRepository
+import io.akryl.useContext
+import react.React
 
 data class TaskFilter(
   val name: String,
@@ -12,78 +12,111 @@ data class TaskFilter(
   val predicate: (Task) -> Boolean
 )
 
-val TodoContext = StoreContext.create<TodoStore>()
+val TodoContext = React.createContext<TodoStore?>(null)
 
-class TodoStore(private val repository: TaskRepository) : Store() {
-  companion object {
-    fun use() = of(TodoContext)
-  }
+data class TodoModel(
+    val items: List<Task>,
+    val filters: List<TaskFilter>,
+    val currentFilter: Int
+)
 
-  val items = ArrayList(repository.getAll())
-
-  val filters = listOf(
-    TaskFilter(
-      name = "All",
-      url = "/",
-      predicate = { true }
+fun initModel() = TodoModel(
+    items = TaskRepository.getAll(),
+    filters = listOf(
+        TaskFilter(
+            name = "All",
+            url = "/",
+            predicate = { true }
+        ),
+        TaskFilter(
+            name = "Active",
+            url = "/active",
+            predicate = { !it.completed }
+        ),
+        TaskFilter(
+            name = "Completed",
+            url = "/completed",
+            predicate = { it.completed }
+        )
     ),
-    TaskFilter(
-      name = "Active",
-      url = "/active",
-      predicate = { !it.completed }
-    ),
-    TaskFilter(
-      name = "Completed",
-      url = "/completed",
-      predicate = { it.completed }
-    )
-  )
+    currentFilter = 0
+)
 
-  var filter: TaskFilter = filters[0]
+fun ComponentScope.useStore() = useContext(TodoContext) ?: throw IllegalStateException("Store is null")
 
-  val filtered by computed { items.filter(filter.predicate) }
+class TodoStore(
+    private val model: TodoModel,
+    private val setModel: (TodoModel) -> Unit
+) {
+    val items get() = model.items
 
-  val allCompleted by computed { items.all { it.completed } }
+    val filters get() = model.filters
 
-  fun add(title: String) {
-    items.add(Task(
-      id = uuid4(),
-      title = title,
-      completed = false
-    ))
-    repository.saveAll(items)
-  }
+    val filter get() = model.filters[model.currentFilter]
 
-  fun toggle(id: String) {
-    val task = items.first { it.id == id }
-    task.completed = !task.completed
-    repository.saveAll(items)
-  }
+    val filtered get() = items.filter(filter.predicate)
 
-  fun clearCompleted() {
-    items.removeAll { it.completed }
-    repository.saveAll(items)
-  }
+    val allCompleted get() = items.all { it.completed }
 
-  fun toggleAll() {
-    val value = !allCompleted
-    items.forEach { it.completed = value }
-    repository.saveAll(items)
-  }
+    fun add(title: String) = action {
+        model.copy(
+            items = items + Task(id = uuid4(), title = title, completed = false)
+        )
+    }
 
-  fun rename(id: String, title: String) {
-    val task = items.first { it.id == id }
-    task.title = title
-    repository.saveAll(items)
-  }
+    fun toggle(id: String) = action {
+        model.copy(
+            items = items.map {
+                if (it.id == id) it.copy(completed = !it.completed) else it
+            }
+        )
+    }
 
-  fun get(id: String) = items.firstOrNull { it.id == id }
+    fun clearCompleted() = action {
+        model.copy(
+            items = items.filterNot { it.completed }
+        )
+    }
 
-  fun remove(id: String) {
-    items.removeAll { it.id == id }
-    repository.saveAll(items)
-  }
+    fun toggleAll() = action {
+        model.copy(
+            items = items.map {
+                it.copy(completed = !it.completed)
+            }
+        )
+    }
+
+    fun rename(id: String, title: String) = action {
+        model.copy(
+            items = items.map {
+                if (it.id == id) it.copy(title = title) else it
+            }
+        )
+    }
+
+    fun find(id: String) = model.items.firstOrNull { it.id == id }
+
+    fun remove(id: String) = action {
+        model.copy(
+            items = items.filterNot { it.id == id }
+        )
+    }
+
+    fun setFilter(index: Int) = action {
+        model.copy(
+            currentFilter = index
+        )
+    }
+
+    private fun action(block: () -> TodoModel) {
+        val newModel = block()
+        if (newModel.items !== model.items) {
+            TaskRepository.saveAll(newModel.items)
+        }
+        setModel(newModel)
+    }
 }
 
 @JsModule("uuid/v4")
+@JsNonModule
 external fun uuid4(): String

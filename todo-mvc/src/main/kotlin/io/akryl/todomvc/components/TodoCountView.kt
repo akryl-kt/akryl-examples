@@ -1,22 +1,21 @@
 package io.akryl.todomvc.components
 
-import io.akryl.Component
-import io.akryl.css.css
-import io.akryl.html.Span
-import io.akryl.react.ReactNode
-import io.akryl.todomvc.store.TodoStore
+import io.akryl.component
+import io.akryl.dom.css.css
+import io.akryl.dom.css.properties.float
+import io.akryl.dom.css.properties.textAlign
+import io.akryl.dom.html.Span
+import io.akryl.todomvc.store.useStore
 
-private val todoCount by css {
-  float.left()
-  textAlign.left()
-}
+val todoCount by css(
+    float.left(),
+    textAlign.left()
+)
 
-class TodoCountView : Component() {
-  override fun render(): ReactNode {
-    val store = TodoStore.use()
+fun todoCountView() = component {
+    val store = useStore()
     val count = store.items.count { !it.completed }
-    val str = if (count == 1) "1 item left" else "$count items left"
+    val str = if (count==1) "1 item left" else "$count items left"
 
-    return Span(clazz = todoCount, text = str)
-  }
+    Span(className = todoCount, text = str)
 }

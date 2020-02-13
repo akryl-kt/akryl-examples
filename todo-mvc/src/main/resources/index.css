@@ -1,0 +1,26 @@
+body {
+    background-color: #F5F5F5;
+    font: 14px "Helvetica Neue", "Helvetica", "Arial", "sans-serif";
+    line-height: 1.4em;
+    color: #4D4D4D;
+}
+
+input {
+    outline: none;
+}
+
+button {
+    margin: none;
+    padding: none;
+    border: none;
+    background: none;
+    fontSize: 100%;
+    vertical-align: baseline;
+    font-family: inherit;
+    font-weight: inherit;
+    color: inherit;
+    outline: none;
+
+    appearance: none;
+    -webkit-appearance: none;
+}
