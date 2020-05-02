@@ -4,7 +4,7 @@ import io.akryl.component
 import io.akryl.dom.css.css
 import io.akryl.dom.css.properties.float
 import io.akryl.dom.css.properties.textAlign
-import io.akryl.dom.html.Span
+import io.akryl.dom.html.span
 import io.akryl.todomvc.store.useStore
 
 val todoCount by css(
@@ -17,5 +17,5 @@ fun todoCountView() = component {
     val count = store.items.count { !it.completed }
     val str = if (count==1) "1 item left" else "$count items left"
 
-    Span(className = todoCount, text = str)
+    span(className = todoCount, text = str)
 }

@@ -4,9 +4,9 @@ import io.akryl.component
 import io.akryl.dom.css.css
 import io.akryl.dom.css.invoke
 import io.akryl.dom.css.properties.*
-import io.akryl.dom.html.Footer
+import io.akryl.dom.html.footer
 
-val footer by css(
+val footerClass by css(
     color(0x707070),
     padding(10.px, 15.px),
     height(20.px),
@@ -32,7 +32,7 @@ val footer by css(
 )
 
 fun footerView() = component {
-    Footer(className = footer, children = listOf(
+    footer(className = footerClass, children = listOf(
         todoCountView(),
         filtersView(),
         clearCompletedView()

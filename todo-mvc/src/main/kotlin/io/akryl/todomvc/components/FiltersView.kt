@@ -5,10 +5,10 @@ import io.akryl.dom.css.classMap
 import io.akryl.dom.css.css
 import io.akryl.dom.css.invoke
 import io.akryl.dom.css.properties.*
-import io.akryl.dom.html.A
-import io.akryl.dom.html.Li
-import io.akryl.dom.html.Span
-import io.akryl.dom.html.Ul
+import io.akryl.dom.html.a
+import io.akryl.dom.html.li
+import io.akryl.dom.html.span
+import io.akryl.dom.html.ul
 import io.akryl.todomvc.store.useStore
 import org.w3c.dom.events.Event
 import react.ReactElement
@@ -59,14 +59,14 @@ fun filtersView() = component {
         }
 
         children.add(
-            Li(className = filterView, onClick = onClick, children = listOf(
-                A(className = linkClass, href = filter.url, text = filter.name)
+            li(className = filterView, onClick = onClick, children = listOf(
+                a(className = linkClass, href = filter.url, text = filter.name)
             ))
         )
         if (index < store.filters.size - 1) {
-            children.add(Span())
+            children.add(span())
         }
     }
 
-    Ul(className = filters, children = children)
+    ul(className = filters, children = children)
 }

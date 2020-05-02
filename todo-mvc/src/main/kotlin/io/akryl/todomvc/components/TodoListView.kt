@@ -6,7 +6,7 @@ import io.akryl.dom.css.properties.listStyleType
 import io.akryl.dom.css.properties.margin
 import io.akryl.dom.css.properties.padding
 import io.akryl.dom.css.properties.px
-import io.akryl.dom.html.Ul
+import io.akryl.dom.html.ul
 import io.akryl.todomvc.store.useStore
 import io.akryl.withKey
 
@@ -19,7 +19,7 @@ private val todoList by css(
 fun todoListView() = component {
     val store = useStore()
 
-    Ul(
+    ul(
         className = todoList,
         children = store.filtered.map { todoView(it.id).withKey(it.id) }
     )

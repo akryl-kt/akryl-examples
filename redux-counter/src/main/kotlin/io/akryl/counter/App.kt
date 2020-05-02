@@ -1,9 +1,9 @@
 package io.akryl.counter
 
 import io.akryl.component
-import io.akryl.dom.html.Button
-import io.akryl.dom.html.Div
-import io.akryl.dom.html.H2
+import io.akryl.dom.html.button
+import io.akryl.dom.html.div
+import io.akryl.dom.html.h2
 import io.akryl.redux.*
 import react_dom.ReactDom
 import redux.StoreEnhancer
@@ -32,11 +32,10 @@ val store = createStore(
             is Msg.Alert -> Pair(state, Cmd.Alert("Count = $state"))
         }
     },
-    execute = { cmd: Cmd ->
+    execute = { cmd: Cmd, _ ->
         when (cmd) {
             is Cmd.Alert -> {
                 window.alert(cmd.message)
-                emptyList()
             }
         }
     },
@@ -47,11 +46,11 @@ fun counter() = component {
     val count = useSelector<Int>()
     val dispatch = useDispatch<Msg>()
 
-    Div(
-        H2(text = "Count: $count"),
-        Button(onClick = { dispatch(Msg.Decrement) }, text = "-"),
-        Button(onClick = { dispatch(Msg.Increment) }, text = "+"),
-        Button(onClick = { dispatch(Msg.Alert) }, text = "alert")
+    div(
+        h2(text = "Count: $count"),
+        button(onClick = { dispatch(Msg.Decrement) }, text = "-"),
+        button(onClick = { dispatch(Msg.Increment) }, text = "+"),
+        button(onClick = { dispatch(Msg.Alert) }, text = "alert")
     )
 }
 

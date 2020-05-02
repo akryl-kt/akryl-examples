@@ -1,12 +1,12 @@
 package io.akryl.helloworld
 
 import io.akryl.component
-import io.akryl.dom.html.H1
+import io.akryl.dom.html.h1
 import react_dom.ReactDom
 import kotlin.browser.document
 
 fun helloWorld() = component {
-  H1(text = "Hello, World!")
+  h1(text = "Hello, World!")
 }
 
 fun main() {

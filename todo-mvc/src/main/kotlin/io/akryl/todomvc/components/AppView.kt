@@ -3,8 +3,8 @@ package io.akryl.todomvc.components
 import io.akryl.component
 import io.akryl.dom.css.css
 import io.akryl.dom.css.properties.*
-import io.akryl.dom.html.Div
-import io.akryl.dom.html.Section
+import io.akryl.dom.html.div
+import io.akryl.dom.html.section
 import io.akryl.provider
 import io.akryl.todomvc.store.TodoContext
 import io.akryl.todomvc.store.TodoStore
@@ -24,8 +24,8 @@ fun appView() = component {
     val store = TodoStore(model, setModel)
 
     TodoContext.provider(value = store, children = listOf(
-        Section(className = app, children = listOf(
-            Div(
+        section(className = app, children = listOf(
+            div(
                 headerView(),
                 mainView(),
                 footerView()

@@ -5,9 +5,9 @@ import io.akryl.dom.css.classMap
 import io.akryl.dom.css.css
 import io.akryl.dom.css.invoke
 import io.akryl.dom.css.properties.*
-import io.akryl.dom.html.Div
-import io.akryl.dom.html.Input
-import io.akryl.dom.html.Label
+import io.akryl.dom.html.div
+import io.akryl.dom.html.input
+import io.akryl.dom.html.label
 import io.akryl.todomvc.store.useStore
 
 private val main by css(
@@ -53,15 +53,15 @@ fun mainView() = component {
         completed to store.allCompleted
     )
 
-    Div(className = main, children = listOf(
-        Input(
+    div(className = main, children = listOf(
+        input(
             id = "toggle-all",
             className = toggleAllInput,
             type = "checkbox",
             checked = store.allCompleted,
             onChange = { store.toggleAll() }
         ),
-        Label(`for` = "toggle-all", className = labelClass),
+        label(`for` = "toggle-all", className = labelClass),
         todoListView()
     ))
 }

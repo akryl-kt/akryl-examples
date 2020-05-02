@@ -117,9 +117,9 @@ fun todoView(id: String) = component {
         setEditingTitle((e.target as HTMLInputElement).value)
     }
 
-    Li(className = rootClass, children = listOf(
+    li(className = rootClass, children = listOf(
         *IfNotNull(editingTitle) { title ->
-            Input(
+            input(
                 className = edit,
                 autoFocus = true,
                 value = title,
@@ -127,19 +127,19 @@ fun todoView(id: String) = component {
                 onBlur = editBlur
             )
         } Else {
-            Div(
-                Input(
+            div(
+                input(
                     className = toggle,
                     type = "checkbox",
                     checked = todo.completed,
                     onChange = { store.toggle(id) }
                 ),
-                Label(
+                label(
                     className = label,
                     text = todo.title,
                     onDoubleClick = { setEditingTitle(todo.title) }
                 ),
-                Button(
+                button(
                     className = destroy,
                     onClick = { store.remove(id) }
                 )

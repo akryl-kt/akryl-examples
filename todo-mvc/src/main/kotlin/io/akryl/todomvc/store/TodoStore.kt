@@ -79,9 +79,11 @@ class TodoStore(
     }
 
     fun toggleAll() = action {
+        val newCompleted = !allCompleted
+
         model.copy(
             items = items.map {
-                it.copy(completed = !it.completed)
+                it.copy(completed = newCompleted)
             }
         )
     }

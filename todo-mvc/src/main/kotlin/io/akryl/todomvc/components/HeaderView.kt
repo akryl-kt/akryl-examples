@@ -4,15 +4,15 @@ import io.akryl.component
 import io.akryl.dom.css.css
 import io.akryl.dom.css.invoke
 import io.akryl.dom.css.properties.*
-import io.akryl.dom.html.H1
-import io.akryl.dom.html.Header
-import io.akryl.dom.html.Input
+import io.akryl.dom.html.h1
+import io.akryl.dom.html.header
+import io.akryl.dom.html.input
 import io.akryl.todomvc.store.useStore
 import io.akryl.useState
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.events.KeyboardEvent
 
-val header by css(
+val headerClass by css(
     position.absolute(),
     top(-155.px),
     width(100.pct),
@@ -55,9 +55,9 @@ fun headerView() = component {
         }
     }
 
-    Header(
-        H1(className = header, text = "todos"),
-        Input(
+    header(
+        h1(className = headerClass, text = "todos"),
+        input(
             className = newTodo,
             placeholder = "What's need to be done?",
             value = title,
