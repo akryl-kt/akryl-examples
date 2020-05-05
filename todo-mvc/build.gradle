@@ -9,7 +9,7 @@ group 'org.example'
 version '1.0'
 
 repositories {
-    mavenLocal()
+    maven { url = "https://oss.jfrog.org/artifactory/oss-snapshot-local/" }
     maven { url = "https://dl.bintray.com/kotlin/kotlin-eap" }
     maven { url = "https://dl.bintray.com/kotlin/kotlin-dev" }
     mavenCentral()
@@ -31,6 +31,7 @@ kotlin {
                 implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime-js:0.14.0"
                 implementation "io.akryl:akryl-core:0.+"
                 implementation "io.akryl:akryl-dom:0.+"
+                implementation "io.akryl:akryl-router:0.+"
 
                 implementation npm("babel-loader", "8.0.6")
                 implementation npm("@babel/core", "7.7.7")
@@ -42,6 +43,8 @@ kotlin {
                 implementation npm("node-sass", "4.13.0")
                 implementation npm("react", "16.12.0")
                 implementation npm("react-dom", "16.12.0")
+                implementation npm("react-router", "5.1.2")
+                implementation npm("react-router-dom", "5.1.2")
             }
         }
     }

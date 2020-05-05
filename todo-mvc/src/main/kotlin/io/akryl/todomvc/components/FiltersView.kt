@@ -5,12 +5,12 @@ import io.akryl.dom.css.classMap
 import io.akryl.dom.css.css
 import io.akryl.dom.css.invoke
 import io.akryl.dom.css.properties.*
-import io.akryl.dom.html.a
 import io.akryl.dom.html.li
 import io.akryl.dom.html.span
 import io.akryl.dom.html.ul
+import io.akryl.router.LocationDescriptor
+import io.akryl.router.link
 import io.akryl.todomvc.store.useStore
-import org.w3c.dom.events.Event
 import react.ReactElement
 
 val filters by css(
@@ -53,14 +53,9 @@ fun filtersView() = component {
             selected to (store.filter === filter)
         )
 
-        val onClick = { e: Event ->
-            store.setFilter(index)
-            e.preventDefault()
-        }
-
         children.add(
-            li(className = filterView, onClick = onClick, children = listOf(
-                a(className = linkClass, href = filter.url, text = filter.name)
+            li(className = filterView, children = listOf(
+                link(className = linkClass, to = LocationDescriptor(pathname = filter.url), text = filter.name)
             ))
         )
         if (index < store.filters.size - 1) {
